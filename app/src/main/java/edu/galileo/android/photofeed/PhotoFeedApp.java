@@ -5,6 +5,10 @@ import android.app.Application;
 import com.firebase.client.Firebase;
 
 import edu.galileo.android.photofeed.domain.di.DomainModule;
+import edu.galileo.android.photofeed.libs.di.LibsModule;
+import edu.galileo.android.photofeed.login.di.LoginComponent;
+import edu.galileo.android.photofeed.login.di.LoginModule;
+import edu.galileo.android.photofeed.login.ui.LoginView;
 
 /**
  * Created by Roberto Hdez. on 27/06/16.
@@ -43,7 +47,13 @@ public class PhotoFeedApp extends Application {
         return SHARED_PREFERENCES_NAME;
     }
 
-    public static String getFirebaseUrl() {
-        return FIREBASE_URL;
+    public LoginComponent getLoginComponent(LoginView view) {
+        return DaggerLoginComponent
+                .builder()
+                .photoFeedAppModule(photoFeedAppModule)
+                .domainModule(domainModule)
+                .libsModule(new LibsModule(null))
+                .loginModule(new LoginModule(view))
+                .build();
     }
 }
