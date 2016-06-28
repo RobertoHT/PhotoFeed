@@ -14,7 +14,7 @@ import edu.galileo.android.photofeed.domain.di.DomainModule;
 public class PhotoFeedApp extends Application {
     private final static String EMAIL_KEY = "email";
     private final static String SHARED_PREFERENCES_NAME = "UserPrefs";
-    private final static String FIREBASE_URL = "https://android-photo-share.firebaseio.com/";
+    private final static String FIREBASE_URL = "https://galileophoto-52d83.firebaseio.com/";
 
     private DomainModule domainModule;
     private PhotoFeedAppModule photoFeedAppModule;
