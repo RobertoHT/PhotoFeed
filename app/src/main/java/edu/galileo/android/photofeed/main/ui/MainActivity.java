@@ -1,7 +1,9 @@
-package edu.galileo.android.photofeed;
+package edu.galileo.android.photofeed.main.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import edu.galileo.android.photofeed.R;
 
 public class MainActivity extends AppCompatActivity {
 

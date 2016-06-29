@@ -33,20 +33,14 @@ public class LoginModule {
 
     @Provides
     @Singleton
-    LoginPresenter providesLoginPresenter(EventBus eventBus, LoginView loginView, LoginInteractor loginInteractor, SignupInteractor signupInteractor) {
-        return new LoginPresenterImpl(eventBus, loginView, loginInteractor, signupInteractor);
+    LoginPresenter providesLoginPresenter(EventBus eventBus, LoginView loginView, LoginInteractor loginInteractor) {
+        return new LoginPresenterImpl(eventBus, loginView, loginInteractor);
     }
 
     @Provides
     @Singleton
     LoginInteractor providesLoginInteractor(LoginRepository repository) {
         return new LoginInteractorImpl(repository);
-    }
-
-    @Provides
-    @Singleton
-    SignupInteractor providesSignupInteractor(LoginRepository repository) {
-        return new SignupInteractorImpl(repository);
     }
 
     @Provides

@@ -13,23 +13,11 @@ public class LoginPresenterImpl implements LoginPresenter {
     EventBus eventBus;
     LoginView loginView;
     LoginInteractor loginInteractor;
-    SignupInteractor signupInteractor;
 
-    public LoginPresenterImpl(EventBus eventBus, LoginView loginView, LoginInteractor loginInteractor, SignupInteractor signupInteractor) {
+    public LoginPresenterImpl(EventBus eventBus, LoginView loginView, LoginInteractor loginInteractor) {
         this.eventBus = eventBus;
         this.loginView = loginView;
         this.loginInteractor = loginInteractor;
-        this.signupInteractor = signupInteractor;
-    }
-
-    @Override
-    public void login(String email, String password) {
-        if (loginView != null) {
-            loginView.disableInputs();
-            loginView.showProgress();
-        }
-
-        loginInteractor.execute(email, password);
     }
 
     @Override
@@ -38,7 +26,7 @@ public class LoginPresenterImpl implements LoginPresenter {
             loginView.disableInputs();
             loginView.showProgress();
         }
-        signupInteractor.execute(email, password);
+        loginInteractor.doSignUp(email, password);
     }
 
     @Override
@@ -53,6 +41,15 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
+    public void validateLogin(String email, String password) {
+        if (loginView != null) {
+            loginView.disableInputs();
+            loginView.showProgress();
+        }
+        loginInteractor.doSignUp(email, password);
+    }
+
+    @Override
     @Subscribe
     public void onEventMainThread(LoginEvent event) {
         switch (event.getEventType()) {
@@ -60,7 +57,7 @@ public class LoginPresenterImpl implements LoginPresenter {
                 onSignInError(event.getErrorMesage());
                 break;
             case LoginEvent.onSignInSuccess:
-                onSignInSuccess(event.getLoggedUserEmail());
+                onSignInSuccess(event.getCurrentUserEmail());
                 break;
             case LoginEvent.onSignUpError:
                 onSignUpError(event.getErrorMesage());

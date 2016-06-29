@@ -6,6 +6,7 @@ import com.firebase.client.Firebase;
 
 import edu.galileo.android.photofeed.domain.di.DomainModule;
 import edu.galileo.android.photofeed.libs.di.LibsModule;
+import edu.galileo.android.photofeed.login.di.DaggerLoginComponent;
 import edu.galileo.android.photofeed.login.di.LoginComponent;
 import edu.galileo.android.photofeed.login.di.LoginModule;
 import edu.galileo.android.photofeed.login.ui.LoginView;
@@ -18,7 +19,7 @@ import edu.galileo.android.photofeed.login.ui.LoginView;
 public class PhotoFeedApp extends Application {
     private final static String EMAIL_KEY = "email";
     private final static String SHARED_PREFERENCES_NAME = "UserPrefs";
-    private final static String FIREBASE_URL = "https://galileophoto-52d83.firebaseio.com/";
+    private final static String FIREBASE_URL = "http://galileophoto-52d83.firebaseio.com/";
 
     private DomainModule domainModule;
     private PhotoFeedAppModule photoFeedAppModule;

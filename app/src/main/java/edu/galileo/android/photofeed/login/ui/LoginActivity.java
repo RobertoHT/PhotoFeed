@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import edu.galileo.android.photofeed.MainActivity;
+import edu.galileo.android.photofeed.main.ui.MainActivity;
 import edu.galileo.android.photofeed.PhotoFeedApp;
 import edu.galileo.android.photofeed.R;
 import edu.galileo.android.photofeed.login.LoginPresenter;
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity
     RelativeLayout container;
 
     @Inject
-    LoginPresenter presenter;
+    LoginPresenter loginPresenter;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -50,10 +50,8 @@ public class LoginActivity extends AppCompatActivity
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         app = (PhotoFeedApp) getApplication();
-
         setupInjection();
-        presenter.onCreate();
-        presenter.validateLogin(null, null);
+        loginPresenter.onCreate();
     }
 
     private void setupInjection() {
@@ -62,21 +60,20 @@ public class LoginActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        presenter.onDestroy();
+        loginPresenter.onDestroy();
         super.onDestroy();
     }
 
     @Override
     @OnClick(R.id.btnSignup)
     public void handleSignUp() {
-        presenter.registerNewUser(inputEmail.getText().toString(),
-                inputPassword.getText().toString());
+        loginPresenter.registerNewUser(inputEmail.getText().toString(), inputPassword.getText().toString());
     }
 
     @Override
     @OnClick(R.id.btnSignin)
     public void handleSignIn() {
-        //presenter.login(inputEmail.getText().toString(),inputPassword.getText().toString());
+        loginPresenter.validateLogin(inputEmail.getText().toString(),inputPassword.getText().toString());
     }
 
     @Override

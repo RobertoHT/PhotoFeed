@@ -12,7 +12,7 @@ public class LoginEvent {
 
     private int eventType;
     private String errorMesage;
-    private String loggedUserEmail;
+    private String currentUserEmail;
 
     public int getEventType() {
         return eventType;
@@ -30,11 +30,11 @@ public class LoginEvent {
         this.errorMesage = errorMesage;
     }
 
-    public String getLoggedUserEmail() {
-        return loggedUserEmail;
+    public String getCurrentUserEmail() {
+        return currentUserEmail;
     }
 
-    public void setLoggedUserEmail(String loggedUserEmail) {
-        this.loggedUserEmail = loggedUserEmail;
+    public void setCurrentUserEmail(String currentUserEmail) {
+        this.currentUserEmail = currentUserEmail;
     }
 }

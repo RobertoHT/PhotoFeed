@@ -30,7 +30,7 @@ public class LoginRepositoryImpl implements LoginRepository {
 
             @Override
             public void onError(FirebaseError error) {
-                post(LoginEvent.onSignUpError, error.getMessage());
+                post(LoginEvent.onSignUpError, error.getMessage(), null);
             }
         });
     }
@@ -42,12 +42,12 @@ public class LoginRepositoryImpl implements LoginRepository {
                 @Override
                 public void onSuccess() {
                     String email = firebase.getAuthEmail();
-                    post(LoginEvent.onSignInSuccess, null, email);
+                    post(LoginEvent.onSignInSuccess, email);
                 }
 
                 @Override
                 public void onError(FirebaseError error) {
-                    post(LoginEvent.onSignInError, error.getMessage());
+                    post(LoginEvent.onSignInError, error.getMessage(), null);
                 }
             });
         } else {
@@ -55,7 +55,7 @@ public class LoginRepositoryImpl implements LoginRepository {
                 @Override
                 public void onSuccess() {
                     String email = firebase.getAuthEmail();
-                    post(LoginEvent.onSignInSuccess, null, email);
+                    post(LoginEvent.onSignInSuccess, email);
                 }
 
                 @Override
@@ -67,18 +67,18 @@ public class LoginRepositoryImpl implements LoginRepository {
     }
 
     private void post(int type) {
-        post(type, null);
+        post(type, null, null);
     }
 
-    private void post(int type, String errorMessage) {
-        post(type, errorMessage, null);
+    private void post(int type, String currentUserEmail) {
+        post(type, null, currentUserEmail);
     }
 
-    private void post(int type, String errorMessage, String loggedUserEmail) {
+    private void post(int type, String errorMessage, String currentUserEmail) {
         LoginEvent loginEvent = new LoginEvent();
         loginEvent.setEventType(type);
         loginEvent.setErrorMesage(errorMessage);
-        loginEvent.setLoggedUserEmail(loggedUserEmail);
+        loginEvent.setCurrentUserEmail(currentUserEmail);
         eventBus.post(loginEvent);
     }
 
