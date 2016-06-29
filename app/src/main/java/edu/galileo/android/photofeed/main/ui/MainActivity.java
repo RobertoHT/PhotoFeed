@@ -5,9 +5,14 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -24,8 +29,16 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import edu.galileo.android.photofeed.PhotoFeedApp;
 import edu.galileo.android.photofeed.R;
 import edu.galileo.android.photofeed.login.ui.LoginActivity;
@@ -45,10 +58,13 @@ public class MainActivity extends AppCompatActivity implements MainView, GoogleA
     MainSectionsPagerAdapter adapter;
     SharedPreferences sharedPreferences;
 
+    private String photoPath;
     private PhotoFeedApp app;
     private GoogleApiClient apiClient;
     private Location lastKnownLocation;
     private boolean resolvingError = false;
+
+    private static final int REQUEST_PICTURE = 0;
     private static final int REQUEST_RESOLVER_ERROR = 0;
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
 
@@ -208,5 +224,63 @@ public class MainActivity extends AppCompatActivity implements MainView, GoogleA
     @Override
     public void onUploadError(String error) {
 
+    }
+
+    @OnClick(R.id.fab)
+    public void takePicture(){
+        Intent chooserIntent = null;
+
+        List<Intent> intentList = new ArrayList<>();
+        Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra("return-data", true);
+
+        File photoFile = getFile();
+        if(photoFile != null){
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            if(cameraIntent.resolveActivity(getPackageManager()) != null){
+                intentList = addIntentsToList(intentList, cameraIntent);
+            }
+        }
+
+        if(pickIntent.resolveActivity(getPackageManager()) != null){
+            intentList = addIntentsToList(intentList, pickIntent);
+        }
+
+        if(intentList.size() > 0){
+            chooserIntent = Intent.createChooser(intentList.remove(intentList.size() - 1),
+                                                getString(R.string.main_message_picture_source));
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new Parcelable[]{}));
+        }
+
+        if(chooserIntent != null){
+            startActivityForResult(chooserIntent, REQUEST_PICTURE);
+        }
+    }
+
+    private File getFile(){
+        File photoFile = null;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imagenFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        try {
+            photoFile = File.createTempFile(imagenFileName, ".jpg", storageDir);
+        } catch (IOException e) {
+            Snackbar.make(viewPager, R.string.main_error_dispatch_camera, Snackbar.LENGTH_SHORT).show();
+        }
+        photoPath = photoFile.getAbsolutePath();
+        return photoFile;
+    }
+
+    private List<Intent> addIntentsToList(List<Intent> list, Intent intent){
+        List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(intent, 0);
+        for(ResolveInfo resolveInfo : resInfo){
+            String packageName = resolveInfo.activityInfo.packageName;
+            Intent targetIntent = new Intent(intent);
+            targetIntent.setPackage(packageName);
+            list.add(targetIntent);
+        }
+        return list;
     }
 }
