@@ -30,7 +30,7 @@ ext {
 
     supportLibraryVersion = '23.1.1'
 
-    playServicesLocationVersion = '8.4.0'
+    playServicesLocationVersion = '9.0.2'
     circleImageViewVersion = '2.0.0'
     firebaseClientVersion = '2.5.0'
     butterknifeVersion = '7.0.1'
