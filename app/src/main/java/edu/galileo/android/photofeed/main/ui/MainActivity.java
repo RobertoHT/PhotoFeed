@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,10 +41,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import edu.galileo.android.photofeed.PhotoFeedApp;
+import edu.galileo.android.photofeed.PhotoListFragment;
+import edu.galileo.android.photofeed.PhotoMapFragment;
 import edu.galileo.android.photofeed.R;
 import edu.galileo.android.photofeed.login.ui.LoginActivity;
 import edu.galileo.android.photofeed.main.MainPresenter;
@@ -58,8 +63,11 @@ public class MainActivity extends AppCompatActivity implements MainView, GoogleA
     @Bind(R.id.viewPager)
     ViewPager viewPager;
 
+    @Inject
     MainPresenter presenter;
+    @Inject
     MainSectionsPagerAdapter adapter;
+    @Inject
     SharedPreferences sharedPreferences;
 
     private String photoPath;
@@ -105,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements MainView, GoogleA
     }
 
     private void setupInjection() {
+        String[] titles = new String[]{getString(R.string.main_title_list), getString(R.string.main_title_map)};
+        Fragment[] fragments = new Fragment[]{new PhotoListFragment(), new PhotoMapFragment()};
+        app.getMainComponent(this, getSupportFragmentManager(), fragments, titles).inject(this);
     }
 
     @Override

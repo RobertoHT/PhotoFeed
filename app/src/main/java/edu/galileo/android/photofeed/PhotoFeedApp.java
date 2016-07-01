@@ -1,6 +1,8 @@
 package edu.galileo.android.photofeed;
 
 import android.app.Application;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import com.firebase.client.Firebase;
 
@@ -10,6 +12,10 @@ import edu.galileo.android.photofeed.login.di.DaggerLoginComponent;
 import edu.galileo.android.photofeed.login.di.LoginComponent;
 import edu.galileo.android.photofeed.login.di.LoginModule;
 import edu.galileo.android.photofeed.login.ui.LoginView;
+import edu.galileo.android.photofeed.main.di.DaggerMainComponent;
+import edu.galileo.android.photofeed.main.di.MainComponent;
+import edu.galileo.android.photofeed.main.di.MainModule;
+import edu.galileo.android.photofeed.main.ui.MainView;
 
 /**
  * Created by Roberto Hdez. on 27/06/16.
@@ -55,6 +61,16 @@ public class PhotoFeedApp extends Application {
                 .domainModule(domainModule)
                 .libsModule(new LibsModule(null))
                 .loginModule(new LoginModule(view))
+                .build();
+    }
+
+    public MainComponent getMainComponent(MainView view, FragmentManager manager, Fragment[] fragments, String[] titles){
+        return DaggerMainComponent
+                .builder()
+                .photoFeedAppModule(photoFeedAppModule)
+                .domainModule(domainModule)
+                .libsModule(new LibsModule(null))
+                .mainModule(new MainModule(view, titles, fragments, manager))
                 .build();
     }
 }
