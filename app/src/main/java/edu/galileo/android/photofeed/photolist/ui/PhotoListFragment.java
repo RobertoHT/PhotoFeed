@@ -1,4 +1,4 @@
-package edu.galileo.android.photofeed;
+package edu.galileo.android.photofeed.photolist.ui;
 
 
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import edu.galileo.android.photofeed.R;
 
 
 /**

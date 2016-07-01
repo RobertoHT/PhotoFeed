@@ -47,7 +47,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import edu.galileo.android.photofeed.PhotoFeedApp;
-import edu.galileo.android.photofeed.PhotoListFragment;
+import edu.galileo.android.photofeed.photolist.ui.PhotoListFragment;
 import edu.galileo.android.photofeed.PhotoMapFragment;
 import edu.galileo.android.photofeed.R;
 import edu.galileo.android.photofeed.login.ui.LoginActivity;
