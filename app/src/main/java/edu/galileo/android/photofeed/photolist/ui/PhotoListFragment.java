@@ -26,6 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import edu.galileo.android.photofeed.PhotoFeedApp;
 import edu.galileo.android.photofeed.R;
 import edu.galileo.android.photofeed.entities.Photo;
 import edu.galileo.android.photofeed.photolist.PhotoListPresenter;
@@ -60,6 +61,8 @@ public class PhotoListFragment extends Fragment implements PhotoListView, OnItem
     }
 
     private void setupInjection() {
+        PhotoFeedApp app = (PhotoFeedApp) getActivity().getApplication();
+        app.getPhotoListComponent(this, this, this).inject(this);
     }
 
     @Override

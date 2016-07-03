@@ -12,10 +12,13 @@ import edu.galileo.android.photofeed.login.di.DaggerLoginComponent;
 import edu.galileo.android.photofeed.login.di.LoginComponent;
 import edu.galileo.android.photofeed.login.di.LoginModule;
 import edu.galileo.android.photofeed.login.ui.LoginView;
-import edu.galileo.android.photofeed.main.di.DaggerMainComponent;
 import edu.galileo.android.photofeed.main.di.MainComponent;
 import edu.galileo.android.photofeed.main.di.MainModule;
 import edu.galileo.android.photofeed.main.ui.MainView;
+import edu.galileo.android.photofeed.photolist.di.PhotoListComponent;
+import edu.galileo.android.photofeed.photolist.di.PhotoListModule;
+import edu.galileo.android.photofeed.photolist.ui.PhotoListView;
+import edu.galileo.android.photofeed.photolist.ui.adapters.OnItemClickListener;
 
 /**
  * Created by Roberto Hdez. on 27/06/16.
@@ -71,6 +74,16 @@ public class PhotoFeedApp extends Application {
                 .domainModule(domainModule)
                 .libsModule(new LibsModule(null))
                 .mainModule(new MainModule(view, titles, fragments, manager))
+                .build();
+    }
+
+    public PhotoListComponent getPhotoListComponent(Fragment fragment, PhotoListView view, OnItemClickListener onItemClickListener) {
+        return DaggerPhotoListComponent
+                .builder()
+                .photoFeedAppModule(photoFeedAppModule)
+                .domainModule(domainModule)
+                .libsModule(new LibsModule(null)
+                .photoListModule(new PhotoListModule(view, onItemClickListener))
                 .build();
     }
 }
