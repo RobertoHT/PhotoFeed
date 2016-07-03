@@ -19,6 +19,9 @@ import edu.galileo.android.photofeed.photolist.di.PhotoListComponent;
 import edu.galileo.android.photofeed.photolist.di.PhotoListModule;
 import edu.galileo.android.photofeed.photolist.ui.PhotoListView;
 import edu.galileo.android.photofeed.photolist.ui.adapters.OnItemClickListener;
+import edu.galileo.android.photofeed.photomap.di.PhotoMapComponent;
+import edu.galileo.android.photofeed.photomap.di.PhotoMapModule;
+import edu.galileo.android.photofeed.photomap.ui.PhotoMapView;
 
 /**
  * Created by Roberto Hdez. on 27/06/16.
@@ -82,8 +85,20 @@ public class PhotoFeedApp extends Application {
                 .builder()
                 .photoFeedAppModule(photoFeedAppModule)
                 .domainModule(domainModule)
-                .libsModule(new LibsModule(null)
+                .libsModule(new LibsModule(null))
                 .photoListModule(new PhotoListModule(view, onItemClickListener))
                 .build();
     }
+
+    public PhotoMapComponent getPhotoMapComponent(Fragment fragment, PhotoMapView view) {
+        return DaggerPhotoMapComponent
+                .builder()
+                .photoFeedAppModule(photoFeedAppModule)
+                .domainModule(domainModule)
+                .libsModule(new LibsModule(null))
+                .photoMapModule(new PhotoMapModule(view))
+                .build();
+
+    }
+
 }

@@ -1,7 +1,10 @@
 package edu.galileo.android.photofeed.photomap.ui;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -9,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import javax.inject.Inject;
@@ -25,7 +30,7 @@ import edu.galileo.android.photofeed.photomap.PhotoMapPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PhotoMapFragment extends Fragment implements PhotoMapView {
+public class PhotoMapFragment extends Fragment implements PhotoMapView, OnMapReadyCallback {
     @Bind(R.id.container)
     FrameLayout container;
 
@@ -35,6 +40,9 @@ public class PhotoMapFragment extends Fragment implements PhotoMapView {
     ImageLoader imageLoader;
     @Inject
     PhotoMapPresenter presenter;
+
+    private GoogleMap map;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 1;
 
     public PhotoMapFragment() {
     }
@@ -95,5 +103,32 @@ public class PhotoMapFragment extends Fragment implements PhotoMapView {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        map.setInfoWindowAdapter(this);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
+        } else {
+            map.setMyLocationEnabled(true);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (map != null) {
+                        map.setMyLocationEnabled(true);
+                    }
+                }
+                return;
+            }
+        }
     }
 }
