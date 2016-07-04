@@ -2,6 +2,7 @@ package edu.galileo.android.photofeed.photomap.ui;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +31,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import edu.galileo.android.photofeed.R;
 import edu.galileo.android.photofeed.domain.Util;
 import edu.galileo.android.photofeed.entities.Photo;
@@ -38,7 +42,7 @@ import edu.galileo.android.photofeed.photomap.PhotoMapPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PhotoMapFragment extends Fragment implements PhotoMapView, OnMapReadyCallback {
+public class PhotoMapFragment extends Fragment implements PhotoMapView, OnMapReadyCallback, GoogleMap.InfoWindowAdapter {
     @Bind(R.id.container)
     FrameLayout container;
 
@@ -155,5 +159,30 @@ public class PhotoMapFragment extends Fragment implements PhotoMapView, OnMapRea
                 return;
             }
         }
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        View window = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.info_window, null);
+        Photo photo = markers.get(marker);
+        render(window, photo);
+
+        return window;
+    }
+
+    private void render(View view, final Photo currentPhoto) {
+        CircleImageView imgAvatar = (CircleImageView)view.findViewById(R.id.imgAvatar);
+        TextView txtUser = (TextView)view.findViewById(R.id.txtUser);
+        final ImageView imgMain = (ImageView)view.findViewById(R.id.imgMain);
+
+        imageLoader.load(imgMain, currentPhoto.getUrl());
+        imageLoader.load(imgAvatar, utils.getAvatarUrl(currentPhoto.getEmail()));
+        txtUser.setText(currentPhoto.getEmail());
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
     }
 }
